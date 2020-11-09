@@ -41,7 +41,15 @@ type Theorem {
     title: String!
     proof: String!
     definitionsUsed: [Definition]
-    theoremsUsed: [Theorem]
+    knowledgeUsed: [ID!]
+}
+
+type Proposition {
+    # theoremId: ID!
+    title: String!
+    proof: String!
+    definitionsUsed: [Definition]
+    theoremsUsed: [ID!]
 }
 
 type Exercise {
@@ -64,7 +72,9 @@ type Knowledge {
 
 
 type Mutation {
-    createDefinition(sec_id: ID!, title: String!, content: String, definitionsUsed: [ID!]) : Definition @cypher(statement: """
+    createDefinition(sec_id: ID!, title: String!, content: String, definitionsUsed: [ID!]) : Definition 
+    @isAuthenticated
+    @cypher(statement: """
     MATCH (s) WHERE id(s) = toInteger($sec_id)
     CREATE (s) <- [:DEFINITION_OF] - (x :Definition {title: $title, content: $content})  
     WITH x, $definitionsUsed as ids 

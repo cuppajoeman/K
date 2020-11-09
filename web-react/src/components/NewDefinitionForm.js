@@ -1,7 +1,8 @@
 import React from 'react'
 import { useMutation, gql, Mutation } from '@apollo/client'
 import { useState } from 'react'
-import { MathpixMarkdownModel as MM } from 'mathpix-markdown-it'
+// import { MathpixMarkdownModel as MM } from 'mathpix-markdown-it'
+import { MathpixMarkdown, MathpixLoader } from 'mathpix-markdown-it'
 
 const CREATE_DEFINITION = gql`
   mutation CreateDefinition(
@@ -21,7 +22,7 @@ const CREATE_DEFINITION = gql`
     }
   }
 `
-export default function NewDefinitionForm() {
+export default function NewDefinitionForm(props) {
   const [result, setResult] = useState('')
   const [title, setTitle] = useState('')
   const [content, setContent] = useState('')
@@ -32,14 +33,13 @@ export default function NewDefinitionForm() {
     event.preventDefault()
     const definitionsUsed = defsUsed.split(',')
     createDefinition({
-      variables: { sec_id: 6, title, content, definitionsUsed },
+      variables: { sec_id: props.parentId, title, content, definitionsUsed },
     })
   }
 
   function handleChange(event) {
     setContent(event.target.value)
     event.preventDefault()
-    setResult(MM.markdownToHTML(content))
   }
 
   return (
@@ -63,10 +63,9 @@ export default function NewDefinitionForm() {
             onChange={(e) => setDefsUsed(e.target.value)}
           />
         </label>
-        <div
-          id="preview-content"
-          dangerouslySetInnerHTML={{ __html: result }}
-        />
+        <MathpixLoader>
+          <MathpixMarkdown text={content} />
+        </MathpixLoader>
         <br></br>
         <input type="submit" value="Create" />
       </form>

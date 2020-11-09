@@ -3,14 +3,14 @@ import { useMutation, gql, Mutation } from '@apollo/client'
 import { useState } from 'react'
 import { MathpixMarkdownModel as MM } from 'mathpix-markdown-it'
 
-const CREATE_THEOREM = gql`
-  mutation CreateTheorem(
+const CREATE_PROPOSITION = gql`
+  mutation CreateProposition(
     $sec_id: ID!
     $title: String!
     $proof: String
     $knowledgeUsed: [ID!]
   ) {
-    createTheorem(
+    createProposition(
       sec_id: $sec_id
       title: $title
       proof: $proof
@@ -21,17 +21,17 @@ const CREATE_THEOREM = gql`
     }
   }
 `
-export default function NewTheoremForm() {
+export default function NewPropositionForm() {
   const [result, setResult] = useState('')
   const [title, setTitle] = useState('')
   const [proof, setProof] = useState('')
   const [knowledgeUsed, setKnowledgeUsed] = useState('')
-  const [createTheorem, { data }] = useMutation(CREATE_THEOREM)
+  const [createProposition, { data }] = useMutation(CREATE_PROPOSITION)
 
   function handleSubmit(event) {
     event.preventDefault()
     const kU = knowledgeUsed.split(',')
-    createTheorem({
+    createProposition({
       variables: { sec_id: 3, title, proof, knowledgeUsed: kU },
     })
   }
@@ -44,7 +44,7 @@ export default function NewTheoremForm() {
 
   return (
     <div>
-      <h4>Create a new theorem:</h4>
+      <h4>Create a new proposition:</h4>
       <form onSubmit={handleSubmit}>
         <label>
           Title:

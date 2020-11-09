@@ -1,42 +1,65 @@
 import React from 'react'
+import { useState } from 'react'
 import { MathpixMarkdown, MathpixLoader } from 'mathpix-markdown-it'
 
-class Definition extends React.Component {
-  constructor(props) {
-    super(props)
-    this.state = { value: this.props.def.content }
+export default function Definition(props) {
+  const [title, setTitle] = useState(props.def.title)
+  const [content, setContent] = useState(props.def.content)
+  const [defsUsed, setDefsUsed] = useState(
+    props.def.definitionsUsed.map((d) => d._id).toString()
+  )
+  // const [createDefinition, { data }] = useMutation(CREATE_DEFINITION)
 
-    this.handleChange = this.handleChange.bind(this)
-    this.handleSubmit = this.handleSubmit.bind(this)
+  function handleSubmit(event) {
+    event.preventDefault()
+    const definitionsUsed = defsUsed.split(',')
+    // edit definition
+    // createDefinition({
+    //   variables: { sec_id: props.parentId, title, content, definitionsUsed },
+    // })
   }
 
-  handleChange(event) {
-    this.setState({ value: event.target.value })
-  }
-
-  handleSubmit(event) {
-    alert('A name was submitted: ' + this.state.value)
+  function handleChange(event) {
+    setContent(event.target.value)
     event.preventDefault()
   }
 
-  render() {
-    return (
-      <form onSubmit={this.handleSubmit}>
-        <p>
-          Title: {this.props.def.title}, ID: {this.props.def._id}
-        </p>
+  return (
+    <details key={props.def._id}>
+      <summary>
+        <MathpixLoader>
+          <MathpixMarkdown text={props.def.title} />
+        </MathpixLoader>
+      </summary>
+      <MathpixLoader>
+        <MathpixMarkdown text={content} />
+      </MathpixLoader>
+      <form onSubmit={handleSubmit}>
         <label>
+          Title:
+          <br />
+          <input
+            type="text"
+            name="title"
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+          />
+          <br />
           Content:
-          <MathpixLoader>
-            <MathpixMarkdown text={this.state.value} />
-          </MathpixLoader>
-          <textarea value={this.state.value} onChange={this.handleChange} />
+          <br />
+          <textarea name="content" value={content} onChange={handleChange} />
+          <br />
+          Definitions Used:
+          <br />
+          <textarea
+            name="defsUsed"
+            value={defsUsed}
+            onChange={(e) => setDefsUsed(e.target.value)}
+          />
         </label>
-        <input type="submit" value="Edit" />
-        <input type="submit" value="Delete" />
+        <br></br>
+        <input type="submit" value="Update" />
       </form>
-    )
-  }
+    </details>
+  )
 }
-
-export default Definition

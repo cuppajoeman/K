@@ -24,6 +24,9 @@ const schema = makeAugmentedSchema({
   config: {
     query: true,
     mutation: true,
+    auth: {
+      isAuthenticated: true,
+    },
   },
 })
 
@@ -69,7 +72,9 @@ init(driver)
  * generated resolvers to connect to the database.
  */
 const server = new ApolloServer({
-  context: { driver, neo4jDatabase: process.env.NEO4J_DATABASE },
+  context: ({ req }) => {
+    return { req, driver, neo4jDatabase: process.env.NEO4J_DATABASE }
+  },
   schema: schema,
   introspection: true,
   playground: true,
