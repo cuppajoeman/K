@@ -1,49 +1,25 @@
 import React from 'react'
-import { useMutation, gql, Mutation } from '@apollo/client'
 import { useState } from 'react'
 import { MathpixMarkdown, MathpixLoader } from 'mathpix-markdown-it'
 
-const CREATE_THEOREM = gql`
-  mutation CreateTheorem(
-    $sec_id: ID!
-    $title: String!
-    $proof: String
-    $definitionsUsed: [ID!]
-    $theoremsUsed: [ID!]
-  ) {
-    createTheorem(
-      sec_id: $sec_id
-      title: $title
-      proof: $proof
-      definitionsUsed: $definitionsUsed
-      theoremsUsed: $theoremsUsed
-    ) {
-      title
-      proof
-    }
-  }
-`
-export default function NewTheoremForm(props) {
-  const [result, setResult] = useState('')
-  const [title, setTitle] = useState('')
-  const [proof, setProof] = useState('')
-  const [defsUsed, setDefsUsed] = useState('')
-  const [theoremsUsed, setTheoremsUsed] = useState('')
-  const [createTheorem, { data }] = useMutation(CREATE_THEOREM)
+export default function Lemma(props) {
+  const [title, setTitle] = useState(props.lemma.title)
+  const [proof, setProof] = useState(props.lemma.proof)
+  const [theoremsUsed, setTheoremsUsed] = useState(
+    props.lemma.theoremsUsed.map((d) => d._id).toString()
+  )
+  const [defsUsed, setDefsUsed] = useState(
+    props.lemma.definitionsUsed.map((d) => d._id).toString()
+  )
+  // const [createDefinition, { data }] = useMutation(CREATE_DEFINITION)
 
   function handleSubmit(event) {
     event.preventDefault()
-    const dU = defsUsed.split(',')
-    const tU = theoremsUsed.split(',')
-    createTheorem({
-      variables: {
-        sec_id: props.parentId,
-        title,
-        proof,
-        definitionsUsed: dU,
-        theoremsUsed: tU,
-      },
-    })
+    const definitionsUsed = defsUsed.split(',')
+    // edit definition
+    // createDefinition({
+    //   variables: { sec_id: props.parentId, title, content, definitionsUsed },
+    // })
   }
 
   function handleChange(event) {
@@ -52,8 +28,13 @@ export default function NewTheoremForm(props) {
   }
 
   return (
-    <div>
-      <h4>Create a new theorem:</h4>
+    <details key={props.lemma._id}>
+      <summary>
+        ID: {props.lemma._id}
+        <MathpixLoader>
+          <MathpixMarkdown text={props.lemma.title} />
+        </MathpixLoader>
+      </summary>
       <MathpixLoader>
         <MathpixMarkdown text={proof} />
       </MathpixLoader>
@@ -88,9 +69,9 @@ export default function NewTheoremForm(props) {
             onChange={(e) => setTheoremsUsed(e.target.value)}
           />
         </label>
-        <br />
-        <input type="submit" value="Create" />
+        <br></br>
+        <input type="submit" value="Update" />
       </form>
-    </div>
+    </details>
   )
 }

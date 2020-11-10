@@ -3,15 +3,15 @@ import { useMutation, gql, Mutation } from '@apollo/client'
 import { useState } from 'react'
 import { MathpixMarkdown, MathpixLoader } from 'mathpix-markdown-it'
 
-const CREATE_THEOREM = gql`
-  mutation CreateTheorem(
+const CREATE_LEMMA = gql`
+  mutation CreateLemma(
     $sec_id: ID!
     $title: String!
     $proof: String
     $definitionsUsed: [ID!]
     $theoremsUsed: [ID!]
   ) {
-    createTheorem(
+    createLemma(
       sec_id: $sec_id
       title: $title
       proof: $proof
@@ -23,19 +23,18 @@ const CREATE_THEOREM = gql`
     }
   }
 `
-export default function NewTheoremForm(props) {
-  const [result, setResult] = useState('')
+export default function NewLemmaForm(props) {
   const [title, setTitle] = useState('')
   const [proof, setProof] = useState('')
   const [defsUsed, setDefsUsed] = useState('')
   const [theoremsUsed, setTheoremsUsed] = useState('')
-  const [createTheorem, { data }] = useMutation(CREATE_THEOREM)
+  const [createLemma, { data }] = useMutation(CREATE_LEMMA)
 
   function handleSubmit(event) {
     event.preventDefault()
     const dU = defsUsed.split(',')
     const tU = theoremsUsed.split(',')
-    createTheorem({
+    createLemma({
       variables: {
         sec_id: props.parentId,
         title,
@@ -53,7 +52,7 @@ export default function NewTheoremForm(props) {
 
   return (
     <div>
-      <h4>Create a new theorem:</h4>
+      <h4>Create a new lemma:</h4>
       <MathpixLoader>
         <MathpixMarkdown text={proof} />
       </MathpixLoader>

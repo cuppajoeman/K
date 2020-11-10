@@ -48,15 +48,20 @@ export default function NewDefinitionForm(props) {
       <form onSubmit={handleSubmit}>
         <label>
           Title:
+          <br />
           <input
             type="text"
             name="title"
             value={title}
             onChange={(e) => setTitle(e.target.value)}
           />
+          <br />
           Content:
+          <br />
           <textarea name="content" value={content} onChange={handleChange} />
+          <br />
           Definitions Used:
+          <br />
           <textarea
             name="defsUsed"
             value={defsUsed}

@@ -27,6 +27,7 @@ export default function Definition(props) {
   return (
     <details key={props.def._id}>
       <summary>
+        ID: {props.def._id}
         <MathpixLoader>
           <MathpixMarkdown text={props.def.title} />
         </MathpixLoader>

@@ -15,10 +15,16 @@ import {
 import { Menu as MenuIcon } from '@material-ui/icons'
 
 import Profile from './components/Profile'
+
 import Definition from './components/ContentForm'
+import Theorem from './components/Theorem'
+import Proposition from './components/Proposition'
+import Lemma from './components/Lemma'
+
 import NewDefinitionForm from './components/NewDefinitionForm'
 import NewTheoremForm from './components/NewTheoremForm'
 import NewPropositionForm from './components/NewPropositionForm'
+import NewLemmaForm from './components/NewLemmaForm'
 
 /**
  * Our data comes from users-data.js
@@ -51,6 +57,34 @@ const GET_EVERYTHING = gql`
               _id
               title
               proof
+              definitionsUsed {
+                _id
+              }
+              theoremsUsed {
+                _id
+              }
+            }
+            propositions {
+              _id
+              title
+              proof
+              definitionsUsed {
+                _id
+              }
+              theoremsUsed {
+                _id
+              }
+            }
+            lemmas {
+              _id
+              title
+              proof
+              definitionsUsed {
+                _id
+              }
+              theoremsUsed {
+                _id
+              }
             }
           }
         }
@@ -137,12 +171,12 @@ export default function App() {
                                     {isAuthenticated && (
                                       <NewTheoremForm parentId={sec._id} />
                                     )}
-                                    {sec.theorems.map((theo) => {
+                                    {sec.theorems.map((theorem) => {
                                       return (
-                                        <details key={theo._id}>
-                                          <p>{theo.title}</p>
-                                          <p>{theo.proof}</p>
-                                        </details>
+                                        <Theorem
+                                          key={theorem._id}
+                                          theorem={theorem}
+                                        />
                                       )
                                     })}
                                   </details>
@@ -151,26 +185,23 @@ export default function App() {
                                     {isAuthenticated && (
                                       <NewPropositionForm parentId={sec._id} />
                                     )}
-                                    {sec.theorems.map((theo) => {
+                                    {sec.propositions.map((proposition) => {
                                       return (
-                                        <details key={theo._id}>
-                                          <p>{theo.title}</p>
-                                          <p>{theo.proof}</p>
-                                        </details>
+                                        <Proposition
+                                          key={proposition._id}
+                                          proposition={proposition}
+                                        />
                                       )
                                     })}
                                   </details>
                                   <details>
                                     <summary>Lemmas</summary>
                                     {isAuthenticated && (
-                                      <NewTheoremForm parentId={sec._id} />
+                                      <NewLemmaForm parentId={sec._id} />
                                     )}
-                                    {sec.theorems.map((theo) => {
+                                    {sec.lemmas.map((lemma) => {
                                       return (
-                                        <details key={theo._id}>
-                                          <p>{theo.title}</p>
-                                          <p>{theo.proof}</p>
-                                        </details>
+                                        <Lemma key={lemma._id} lemma={lemma} />
                                       )
                                     })}
                                   </details>
